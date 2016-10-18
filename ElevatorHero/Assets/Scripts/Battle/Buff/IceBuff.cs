@@ -5,27 +5,39 @@ public class IceBuff : Buff {
 
     HeroController controller = null;
 
-    bool effecting = false;
+    HeroManager manager;
 
-    float downspeed = 0.0f;
 	override public void Init()
     {
 
         try { controller = target_status.GetComponent<HeroController>(); }
         catch { Debug.Log("statusがセットされていないか、存在していません。また、ヒーローコントローラーが存在しない可能性もあります。"); }
 
-        if (controller != null)
+
+        manager = target_status.GetComponent<HeroManager>();
+
+        if (manager)
         {
-            downspeed = controller.speed * 0.5f;
-            controller.speed -= downspeed;
-            effecting = true;
+            manager.ShotAnimation(HeroManager.HeroAnimState.freeze);
         }
 
+        buff_time_sec = 2.0f;
     }
+
+
 
     // Update is called once per frame
     override public void Update () {
-	if((buff_time_sec+start_time) <= Time.time)
+
+        if (controller)
+        {
+            controller.move = false;
+        }
+
+
+
+
+        if ((buff_time_sec+start_time) <= Time.time)
         {
             parentlist.Remove(this);
         }
@@ -34,10 +46,15 @@ public class IceBuff : Buff {
 
     override public void End()
     {
-        if(controller != null && effecting)
+        if (manager)
         {
-            controller.speed += downspeed;
-            effecting = false;
+            manager.ShotAnimation(HeroManager.HeroAnimState.walking);
         }
+
+        if (controller)
+        {
+            controller.move = true;
+        }
+
     }
 }

@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -85,6 +79,7 @@
     <Compile Include="Assets\Scripts\Battle\Buff\Buff.cs" />
     <Compile Include="Assets\Scripts\Battle\Buff\BuffList.cs" />
     <Compile Include="Assets\Scripts\Battle\Buff\IceBuff.cs" />
+    <Compile Include="Assets\Scripts\Battle\Buff\NormalDamageBuff.cs" />
     <Compile Include="Assets\Scripts\Battle\Effect\Fire.cs" />
     <Compile Include="Assets\Scripts\Battle\Effect\Ice.cs" />
     <Compile Include="Assets\Scripts\Battle\EnemyManager.cs" />
