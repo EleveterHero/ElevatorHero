@@ -1,0 +1,206 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+public class GameManager : MonoBehaviour {
+
+	enum BattleState
+	{
+		First,
+		Main,
+		End,
+		Pose
+	}
+
+	Canvas m_battle_ui = null;
+	Canvas battle_ui
+	{
+		get
+		{
+			if (m_battle_ui == null)
+			{
+				m_battle_ui = GameObject.Find("UI/BattleUI").GetComponent<Canvas>();
+			}
+			return m_battle_ui;
+		}
+		
+	}
+
+	Canvas m_pose_ui = null;
+	Canvas pose_ui
+	{
+		get
+		{
+			if(m_pose_ui == null)
+			{
+				m_pose_ui = GameObject.Find("UI/PoseUI").GetComponent<Canvas>();
+			}
+			return m_pose_ui;
+		}
+	}
+
+	GraphicRaycaster m_raycaster_ui = null;
+	GraphicRaycaster raycaster_ui
+	{
+		get
+		{
+			if(m_raycaster_ui == null)
+			{
+				m_raycaster_ui = battle_ui.GetComponent<GraphicRaycaster>();
+			}
+			return m_raycaster_ui;
+		}
+	}
+	GraphicRaycaster m_raycaster_pose = null;
+	GraphicRaycaster raycaster_pose
+	{
+		get
+		{
+			if(m_raycaster_pose == null)
+			{
+				m_raycaster_pose = pose_ui.GetComponent<GraphicRaycaster>();
+			}
+			return m_raycaster_pose;
+		}
+	}
+
+	GameObject m_hero = null;
+	GameObject hero
+	{
+		get
+		{
+			if(m_hero == null)
+			{
+				m_hero = transform.FindChild("Hero").gameObject;
+			}
+			return m_hero;
+		}
+	}
+
+	HeroController m_hero_controller = null;
+	HeroController hero_controller
+	{
+		get
+		{
+			if(m_hero_controller == null)
+			{
+				m_hero_controller = hero.GetComponent<HeroController>();
+			}
+			return m_hero_controller;
+		}
+	}
+
+	BackSprite m_backsprite = null;
+	BackSprite backsprite
+	{
+		get
+		{
+			if (m_backsprite == null)
+			{
+				m_backsprite = GameObject.Find("BackGround/BackGround").GetComponent<BackSprite>();
+			}
+			return m_backsprite;
+		}
+	}
+
+
+
+
+
+	StateMachine<BattleState> sm_battlestate = null;
+
+	void Awake()
+	{
+		sm_battlestate = new StateMachine<BattleState>();
+		sm_battlestate.Add(BattleState.First, FirstInit, FirstUpdate);
+		sm_battlestate.Add(BattleState.Main, MainInit, MainUpdate,MainEnd);
+
+
+		sm_battlestate.Add(BattleState.Pose, PoseInit, null, PoseEnd);
+
+		
+	}
+
+	// Use this for initialization
+	void Start () {
+		sm_battlestate.SetState(BattleState.First);
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (sm_battlestate != null)
+		{
+			sm_battlestate.Update();
+		}
+	}
+
+	void FirstInit()
+	{
+		pose_ui.gameObject.SetActive(false);
+
+		raycaster_ui.enabled = true;
+
+		hero_controller.ResetToStartPosition();
+
+		backsprite.floor = 0.0f;
+		backsprite.move = false;
+
+	}
+
+	void FirstUpdate()
+	{
+		if (Input.GetMouseButtonUp(0))
+		{
+			sm_battlestate.SetState(BattleState.Main);
+		}
+	}
+
+	void MainInit()
+	{
+		hero_controller.move = true;
+		backsprite.move = true;
+	}
+
+	void MainUpdate()
+	{
+
+	}
+
+	void MainEnd()
+	{
+		hero_controller.move = false;
+		backsprite.move = false;
+	}
+
+	public void ShowPose()
+	{
+		sm_battlestate.SetState(BattleState.Pose);
+	}
+
+	void PoseInit()
+	{
+		raycaster_ui.enabled = false;
+
+		pose_ui.gameObject.SetActive(true);
+		raycaster_pose.enabled = true;
+	}
+
+	public void PoseContinue()
+	{
+		sm_battlestate.SetState(BattleState.First);
+	}
+
+	public void PoseKeep()
+	{
+		sm_battlestate.SetState(BattleState.Main);
+	}
+
+	void PoseEnd()
+	{
+
+		raycaster_pose.enabled = false;
+		pose_ui.gameObject.SetActive(false);
+
+		raycaster_ui.enabled = true;
+	}
+
+}
