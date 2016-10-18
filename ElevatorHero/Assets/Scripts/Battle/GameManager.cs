@@ -195,7 +195,9 @@ public class GameManager : MonoBehaviour {
 
 	void FirstInit()
 	{
-		pause_ui.gameObject.SetActive(false);
+        Time.timeScale = 1.0f;
+
+        pause_ui.gameObject.SetActive(false);
         gameover_ui.gameObject.SetActive(false);
 
 		raycaster_battle.enabled = true;
@@ -241,6 +243,8 @@ public class GameManager : MonoBehaviour {
 
 	void MainInit()
 	{
+        Time.timeScale = 1.0f;
+
         hero_manager.sm_hero.SetState(HeroManager.HeroState.Play);
 		
 		backsprite.move = true;
@@ -261,6 +265,8 @@ public class GameManager : MonoBehaviour {
 
 	void MainEnd()
 	{
+
+        Time.timeScale = 0.0f;
         hero_manager.sm_hero.SetState(HeroManager.HeroState.Pose);
 		backsprite.move = false;
         
@@ -329,6 +335,8 @@ public class GameManager : MonoBehaviour {
 
     public void GameContinue()
     {
+        Time.timeScale = 1.0f;
+
         raycaster_gameover.enabled = false;
         raycaster_pose.enabled = false;
 
@@ -346,6 +354,7 @@ public class GameManager : MonoBehaviour {
 
     public void GameKeep()
     {
+        Time.timeScale = 1.0f;
         raycaster_gameover.enabled = false;
         raycaster_pose.enabled = false;
 
@@ -354,6 +363,7 @@ public class GameManager : MonoBehaviour {
 
     public void GameReturnTitle()
     {
+        Time.timeScale = 1.0f;
         FadeManager.Instance.LoadLevel("title", 0.5f);
         raycaster_battle.enabled = false;
         raycaster_gameover.enabled = false;

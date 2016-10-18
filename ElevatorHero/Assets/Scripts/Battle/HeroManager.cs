@@ -7,6 +7,8 @@ using UnityEditor;      //!< デプロイ時にEditorスクリプトが入ると
 
 public class HeroManager : MonoBehaviour {
 
+    public bool stopanimation = false;
+
    public enum HeroState{
         FirstInit,
         Play,
@@ -78,6 +80,20 @@ public class HeroManager : MonoBehaviour {
         }
     }
 
+    Animator m_animator;
+    Animator animator
+    {
+        get
+        {
+            if (m_animator == null)
+            {
+                m_animator = GetComponent<Animator>();
+            }
+            return m_animator;
+        }
+    }
+
+
 
     void Awake()
     {
@@ -92,6 +108,8 @@ public class HeroManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+   
+
 	}
 
 
@@ -118,24 +136,27 @@ public class HeroManager : MonoBehaviour {
     void PoseInit()
     {
         hero_status.system_got = true;
-        downed_speed = hero_live2d_anim.speed;
-        hero_live2d_anim.speed = 0;
+        downed_speed = animator.speed;
+        animator.speed = 0.0f;
+
+        
     }
 
     void PoseEnd()
     {
-        hero_live2d_anim.speed = downed_speed;
+        animator.speed = downed_speed;
         hero_status.system_got = false;
+
     }
 
 
     void PlayInit()
     {
-        m_hero_controller.move = true;
+        m_hero_controller.move = true;       
     }
 
     void PlayEnd()
-    {
+    {     
         m_hero_controller.move = false;
     }
 
@@ -160,21 +181,35 @@ public class HeroManager : MonoBehaviour {
         return sm_hero.GetStateName();
     }
 
-    void DamageInit()
-    {
 
+
+    public enum HeroAnimState{
+        walking,
+        damage,
+        freeze
     }
-
-    void DamageUpdate()
+   public void ShotAnimation(HeroAnimState anim_state)
     {
-
+        switch (anim_state)
+        {
+            case HeroAnimState.walking:
+                {
+                    animator.Play(Animator.StringToHash("Hero_Walking"), 0);
+                    break;
+                }
+            case HeroAnimState.damage:
+                {
+                    animator.Play(Animator.StringToHash("Hero_Damage"), 0);
+                    break;
+                }
+            case HeroAnimState.freeze:
+                {
+                    animator.Play(Animator.StringToHash("Hero_Freeze"), 0);
+                    break;
+                }
+        }
+        
     }
-
-    void DamageEnd()
-    {
-
-    }
-
 
 
 

@@ -81,6 +81,8 @@ public class Status:MonoBehaviour{
 
     }
 
+    
+
     public int Damage(int point)
     {
         if (got || system_got)
@@ -89,6 +91,12 @@ public class Status:MonoBehaviour{
         }
         int hitpoint = HP - point;
         HP = Mathf.Clamp(hitpoint, 0, max_HP);
+
+       if(tag == "Player")
+        {
+            AddBuff(new NormalDamageBuff());
+        }
+
         return HP;
     }
 
